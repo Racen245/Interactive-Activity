@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formador de Equipos</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 600px; margin: 0 auto; }
+        .contenedor-lista { margin-bottom: 25px; }
+        .cuadrilla-jugadores { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+            gap: 10px; 
+            margin-top: 15px; 
+        }
+        .cuadrilla-jugadores input { 
+            padding: 8px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            font-size: 14px;
+        }
+        button { 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+        button:hover { background-color: #0056b3; }
+        .equipos { display: flex; gap: 20px; margin-top: 25px; }
+        .equipo { border: 1px solid #ccc; padding: 15px; width: 50%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { color: #333; margin-top: 0; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor-lista">
+        <h1>Lista de jugadores para hoy</h1>
+        <div class="cuadrilla-jugadores" id="celdasJugadores">
+            <input type="text" value="Rolo" placeholder="Jugador 1">
+            <input type="text" value="Randall" placeholder="Jugador 2">
+            <input type="text" value="Edward" placeholder="Jugador 3">
+            <input type="text" value="Tio" placeholder="Jugador 4">
+            <input type="text" value="Esteban" placeholder="Jugador 5">
+            <input type="text" value="Isma" placeholder="Jugador 6">
+            <input type="text" value="Prendas" placeholder="Jugador 7">
+            <input type="text" value="Roberto" placeholder="Jugador 8">
+            <input type="text" value="Dieguito" placeholder="Jugador 9">
+            <input type="text" value="Melvin" placeholder="Jugador 10">
+            <input type="text" value="Josue" placeholder="Jugador 11">
+            <input type="text" value="Invitado" placeholder="Jugador 12">
+        </div>
+    </div>
+
+    <button onclick="generarEquipos()">Generar Equipos</button>
+
+    <div class="equipos">
+        <div class="equipo" id="equipoA"><h2>Equipo A</h2><ul id="listaA"></ul></div>
+        <div class="equipo" id="equipoB"><h2>Equipo B</h2><ul id="listaB"></ul></div>
+    </div>
+
+<script>
+    function generarEquipos() {
+        // Obtenemos los nombres directamente de las 12 celdas en tiempo real
+        const inputs = document.querySelectorAll('#celdasJugadores input');
+        let jugadores = [];
+        
+        inputs.forEach(input => {
+            let nombre = input.value.trim();
+            // Si dejas una celda vacía, le asigna un nombre genérico para no romper el 6vs6
+            if (nombre === "") nombre = "Invitado";
+            jugadores.push(nombre);
+        });
+
+        let valid = false;
+        let equipoA, equipoB;
+        let intentos = 0;
+
+        while (!valid && intentos < 2000) {
+            intentos++;
+            let copia = [...jugadores].sort(() => Math.random() - 0.5);
+            equipoA = copia.slice(0, 6);
+            equipoB = copia.slice(6, 12);
+
+            // Validaciones basadas en los nombres que se ingresen
+            const cumpleRoloDieguito = !(equipoA.includes("Rolo") && equipoA.includes("Dieguito")) && !(equipoB.includes("Rolo") && equipoB.includes("Dieguito"));
+            const cumpleRandallRoberto = !(equipoA.includes("Randall") && equipoA.includes("Roberto")) && !(equipoB.includes("Randall") && equipoB.includes("Roberto"));
+            const cumpleMelvinEdward = !(equipoA.includes("Melvin") && equipoA.includes("Edward")) && !(equipoB.includes("Melvin") && equipoB.includes("Edward"));
+            const cumpleEstebanEdward = !(equipoA.includes("Esteban") && equipoA.includes("Edward")) && !(equipoB.includes("Esteban") && equipoB.includes("Edward"));
+
+            if (cumpleRoloDieguito && cumpleRandallRoberto && cumpleMelvinEdward && cumpleEstebanEdward) {
+                valid = true;
+            }
+        }
+
+        // Si por alguna combinación extraña de nombres el bucle se traba, muestra lo último que generó
+        mostrar(equipoA, 'listaA');
+        mostrar(equipoB, 'listaB');
+    }
+
+    function mostrar(lista, elementoId) {
+        const ul = document.getElementById(elementoId);
+        ul.innerHTML = '';
+        lista.forEach(j => {
+            const li = document.createElement('li');
+            li.textContent = j;
+            ul.appendChild(li);
+        });
+    }
+</script>
+</body>
+</html>
