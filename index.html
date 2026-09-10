@@ -1224,19 +1224,19 @@
 
             })
 
-            .catch((error) => {
+          .catch((error) => {
 
-                console.error(
-                    "Error de inicio de sesión:",
-                    error
-                );
+    console.error(
+        "Error de inicio de sesión:",
+        error
+    );
 
-                mensaje.innerText =
-                    "No fue posible iniciar sesión. Verifica tus datos.";
+    mensaje.innerText =
+        "Error Firebase: " + error.code;
 
-                mensaje.style.color =
-                    "#e74c3c";
-            });
+    mensaje.style.color =
+        "#e74c3c";
+});
         }
 
 
