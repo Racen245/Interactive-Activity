@@ -1224,15 +1224,14 @@
 
             })
 
-          .catch((error) => {
-
+    .catch((error) => {
     console.error(
         "Error de inicio de sesión:",
         error
     );
 
     mensaje.innerText =
-        "Error Firebase: " + error.code;
+        "No fue posible iniciar sesión. Verifica tus datos.";
 
     mensaje.style.color =
         "#e74c3c";
